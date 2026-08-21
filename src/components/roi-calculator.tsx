@@ -610,13 +610,13 @@ function StepStations({
       </p>
       <MoneyField
         id="roi-sales"
-        label="Annual sales of this location"
+        label="What is the approximate annual sales volume of this location?"
         value={inputs.annualSales}
         onChange={(n) => patch({ annualSales: n })}
       />
       <SliderField
         id="roi-station"
-        label="% of sales from stations / displays / impulse"
+        label="What % of sales comes from stations, displays, impulse, or prepared-food areas?"
         value={inputs.stationPct}
         min={5}
         max={40}
@@ -655,7 +655,7 @@ function StepManager({
       </p>
       <SliderField
         id="roi-hours"
-        label="Hours / week chasing checklists"
+        label="How many hours per week does a manager spend chasing incomplete checklists or following up on “I checked it”?"
         value={inputs.hoursPerWeek}
         min={1}
         max={20}
@@ -678,7 +678,7 @@ function StepManager({
       <div className="grid gap-4 sm:grid-cols-2">
         <MoneyField
           id="roi-hourly"
-          label="Fully loaded hourly cost"
+          label="What is a manager’s fully loaded hourly cost (wage + benefits)?"
           value={inputs.hourlyCost}
           hint="Wage + benefits + overhead"
           onChange={(n) => patch({ hourlyCost: n })}
@@ -719,7 +719,10 @@ function StepStandards({
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <Label htmlFor="roi-complaints">Complaints prevented / year</Label>
+          <Label htmlFor="roi-complaints">
+            How many customer complaints or negative reviews related to stock,
+            cleanliness, or station appearance happen in a year?
+          </Label>
           <Input
             id="roi-complaints"
             className="mt-1.5 tabular-nums"
@@ -738,7 +741,7 @@ function StepStandards({
         </div>
         <MoneyField
           id="roi-complaint-cost"
-          label="Cost per complaint"
+          label="What does a typical complaint cost you (refund, recovery, review damage)?"
           value={inputs.costPerComplaint}
           hint="Lost sale + recovery + review impact"
           onChange={(n) => patch({ costPerComplaint: n })}
