@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { authEnabled } from "@/lib/auth/client";
 import { Mark } from "@/components/mark";
 
 export function SiteFooter() {
@@ -25,9 +26,11 @@ export function SiteFooter() {
           <a href="#pricing" className="hover:text-fg">
             Pricing
           </a>
-          <Link to="/login" className="hover:text-fg">
-            Sign in
-          </Link>
+          {authEnabled ? (
+            <Link to="/login" className="hover:text-fg">
+              Sign in
+            </Link>
+          ) : null}
         </div>
       </div>
     </footer>

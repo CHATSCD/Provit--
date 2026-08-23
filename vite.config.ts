@@ -121,10 +121,17 @@ function authPopupPlugin(): Plugin {
   };
 }
 
+// Mount under a subpath (e.g. Vercel multi-zone: prov-it.net/retail rewriting
+// to this deployment) by setting VITE_BASE_PATH="/retail" at build time.
+// Unset/"/" builds for the domain root as before. Read at runtime via Vite's
+// own `import.meta.env.BASE_URL` — see router.tsx and routes/__root.tsx.
+const basepath = process.env.VITE_BASE_PATH?.trim().replace(/\/+$/, "") || undefined;
+
 // `0.0.0.0:8080` is the live-preview contract — don't change host/port.
 // The dev server starts once `src/router.tsx` and `src/routes/` exist — see
 // AGENTS.md § "First scaffold".
 export default defineConfig(({ command, isPreview }) => ({
+  base: basepath ? `${basepath}/` : "/",
   server: {
     host: "0.0.0.0",
     port: 8080,
@@ -141,7 +148,7 @@ export default defineConfig(({ command, isPreview }) => ({
     // Before tanstackStart so /auth/popup never falls through to the SPA.
     authPopupPlugin(),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart(basepath ? { router: { basepath } } : undefined),
     ...(command === "build" || isPreview
       ? [
           nitro({
@@ -150,6 +157,11 @@ export default defineConfig(({ command, isPreview }) => ({
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.
             serverDir: "./server",
+            // Must match `base`/router.basepath above — this is what actually
+            // prefixes the generated Vercel static-asset routes; Vite's `base`
+            // alone only affects URLs embedded in the HTML/JS, not where nitro
+            // serves them from.
+            baseURL: basepath ? `${basepath}/` : undefined,
           }),
         ]
       : []),

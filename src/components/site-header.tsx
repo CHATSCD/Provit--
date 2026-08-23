@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { UserButton } from "@/lib/auth/gates";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { Mark } from "@/components/mark";
 
 function AuthSlot() {
   const { user, isPending } = useCurrentUserState();
+  if (!authEnabled) return null;
   if (isPending) {
     return (
       <div

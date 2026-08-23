@@ -6,6 +6,12 @@ import appCss from "../styles.css?url";
 
 const APP_NAME = "ProveIt";
 
+// Vite's built-in BASE_URL mirrors the configured `base` (vite.config.ts's
+// VITE_BASE_PATH) — "/" by default, e.g. "/retail/" when mounted under a
+// subpath. Hardcoded public/ links below need this prefix; `<Link>` and the
+// `?url` styles import already get it automatically.
+const base = import.meta.env.BASE_URL;
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -20,10 +26,10 @@ export const Route = createRootRoute({
       },
     ],
     links: [
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "icon", type: "image/svg+xml", href: `${base}favicon.svg` },
       { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/icon-180.png" },
+      { rel: "manifest", href: `${base}manifest.webmanifest` },
+      { rel: "apple-touch-icon", href: `${base}icon-180.png` },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
