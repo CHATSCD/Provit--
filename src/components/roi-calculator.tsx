@@ -75,9 +75,20 @@ function readStoredInputs(): RoiInputs {
       plan: isPlanId(o.plan) ? o.plan : DEFAULT_INPUTS.plan,
       billing: isBilling(o.billing) ? o.billing : DEFAULT_INPUTS.billing,
       locations: clamp(Math.round(num(o.locations, DEFAULT_INPUTS.locations)), 1, 50),
-      annualSales: Math.max(0, num(o.annualSales, DEFAULT_INPUTS.annualSales)),
-      stationPct: clamp(num(o.stationPct, DEFAULT_INPUTS.stationPct), 5, 40),
-      liftPct: clamp(num(o.liftPct, DEFAULT_INPUTS.liftPct), 0.5, 5),
+      hotCaseHourlySales: Math.max(
+        0,
+        num(o.hotCaseHourlySales, DEFAULT_INPUTS.hotCaseHourlySales),
+      ),
+      hoursEmptyPerWeek: clamp(
+        num(o.hoursEmptyPerWeek, DEFAULT_INPUTS.hoursEmptyPerWeek),
+        0.5,
+        20,
+      ),
+      stationRecoveryPct: clamp(
+        num(o.stationRecoveryPct, DEFAULT_INPUTS.stationRecoveryPct),
+        10,
+        90,
+      ),
       hoursPerWeek: clamp(num(o.hoursPerWeek, DEFAULT_INPUTS.hoursPerWeek), 1, 20),
       recoveryPct: clamp(num(o.recoveryPct, DEFAULT_INPUTS.recoveryPct), 30, 90),
       hourlyCost: Math.max(0, num(o.hourlyCost, DEFAULT_INPUTS.hourlyCost)),
@@ -609,32 +620,33 @@ function StepStations({
         conservative — you can always raise these later.
       </p>
       <MoneyField
-        id="roi-sales"
-        label="Annual sales of this location"
-        value={inputs.annualSales}
-        onChange={(n) => patch({ annualSales: n })}
+        id="roi-hot-case-sales"
+        label="How much does your hot case (or busiest station) make in sales per hour when it's fully stocked?"
+        value={inputs.hotCaseHourlySales}
+        hint="Rough is fine — think peak-hour ring total"
+        onChange={(n) => patch({ hotCaseHourlySales: n })}
       />
       <SliderField
-        id="roi-station"
-        label="% of sales from stations / displays / impulse"
-        value={inputs.stationPct}
-        min={5}
-        max={40}
-        step={1}
-        format={pctLabel}
-        hint="Typical: 10–25% of sales from stations / displays / impulse"
-        onChange={(n) => patch({ stationPct: n })}
-      />
-      <SliderField
-        id="roi-lift"
-        label="Estimated lift from better-stocked stations"
-        value={inputs.liftPct}
+        id="roi-hours-empty"
+        label="How many hours per week does it sit empty or understocked during peak periods?"
+        value={inputs.hoursEmptyPerWeek}
         min={0.5}
-        max={5}
+        max={20}
         step={0.5}
+        format={(n) => `${n} hr${n === 1 ? "" : "s"}`}
+        hint="Typical: 2–6 hrs/week across peak shifts"
+        onChange={(n) => patch({ hoursEmptyPerWeek: n })}
+      />
+      <SliderField
+        id="roi-station-recovery"
+        label="% of that lost time you'd expect to recover with ProveIt"
+        value={inputs.stationRecoveryPct}
+        min={10}
+        max={90}
+        step={5}
         format={pctLabel}
-        hint="Conservative: 1–3%"
-        onChange={(n) => patch({ liftPct: n })}
+        hint="Conservative: 30–50%"
+        onChange={(n) => patch({ stationRecoveryPct: n })}
       />
     </div>
   );
@@ -655,7 +667,7 @@ function StepManager({
       </p>
       <SliderField
         id="roi-hours"
-        label="Hours / week chasing checklists"
+        label="How many hours per week does a manager spend chasing incomplete checklists or following up on “I checked it”?"
         value={inputs.hoursPerWeek}
         min={1}
         max={20}
@@ -678,7 +690,7 @@ function StepManager({
       <div className="grid gap-4 sm:grid-cols-2">
         <MoneyField
           id="roi-hourly"
-          label="Fully loaded hourly cost"
+          label="What is a manager’s fully loaded hourly cost (wage + benefits)?"
           value={inputs.hourlyCost}
           hint="Wage + benefits + overhead"
           onChange={(n) => patch({ hourlyCost: n })}
@@ -719,7 +731,10 @@ function StepStandards({
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <Label htmlFor="roi-complaints">Complaints prevented / year</Label>
+          <Label htmlFor="roi-complaints">
+            How many customer complaints or negative reviews related to stock,
+            cleanliness, or station appearance happen in a year?
+          </Label>
           <Input
             id="roi-complaints"
             className="mt-1.5 tabular-nums"
@@ -738,7 +753,7 @@ function StepStandards({
         </div>
         <MoneyField
           id="roi-complaint-cost"
-          label="Cost per complaint"
+          label="What does a typical complaint cost you (refund, recovery, review damage)?"
           value={inputs.costPerComplaint}
           hint="Lost sale + recovery + review impact"
           onChange={(n) => patch({ costPerComplaint: n })}

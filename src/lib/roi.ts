@@ -33,9 +33,9 @@ export interface RoiInputs {
   plan: PlanId;
   billing: Billing;
   locations: number;
-  annualSales: number;
-  stationPct: number;
-  liftPct: number;
+  hotCaseHourlySales: number;
+  hoursEmptyPerWeek: number;
+  stationRecoveryPct: number;
   hoursPerWeek: number;
   recoveryPct: number;
   hourlyCost: number;
@@ -51,9 +51,9 @@ export const DEFAULT_INPUTS: RoiInputs = {
   plan: "pro",
   billing: "monthly",
   locations: 1,
-  annualSales: 1_200_000,
-  stationPct: 15,
-  liftPct: 2,
+  hotCaseHourlySales: 60,
+  hoursEmptyPerWeek: 3,
+  stationRecoveryPct: 40,
   hoursPerWeek: 5,
   recoveryPct: 60,
   hourlyCost: 35,
@@ -86,9 +86,10 @@ export function calculateRoi(i: RoiInputs): RoiResult {
   const rate = monthlyRate(i.plan, i.billing);
   const annualCost = rate * 12 * Math.max(1, i.locations);
   const protectedSales =
-    Math.max(0, i.annualSales) *
-    (Math.max(0, i.stationPct) / 100) *
-    (Math.max(0, i.liftPct) / 100);
+    Math.max(0, i.hotCaseHourlySales) *
+    Math.max(0, i.hoursEmptyPerWeek) *
+    Math.max(0, i.weeksPerYear) *
+    (Math.max(0, i.stationRecoveryPct) / 100);
   const managerSavings =
     Math.max(0, i.hoursPerWeek) *
     (Math.max(0, i.recoveryPct) / 100) *
