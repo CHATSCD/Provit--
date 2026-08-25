@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Hero } from "@/components/hero";
 import { Problem } from "@/components/problem";
+import { WhyDifferent } from "@/components/why-different";
 import { RoiCalculator } from "@/components/roi-calculator";
 import { HowItWorks } from "@/components/how-it-works";
 import { Pillars } from "@/components/pillars";
@@ -18,6 +19,7 @@ function Home() {
       <main>
         <Hero />
         <Problem />
+        <WhyDifferent />
         <section id="roi" className="scroll-mt-20 px-4 py-16 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-medium uppercase tracking-[0.16em] text-muted">ROI calculator</p>
