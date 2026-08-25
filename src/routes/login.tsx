@@ -13,7 +13,9 @@ function Login() {
         className="absolute left-4 top-4 inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-fg sm:left-6 sm:top-6"
       >
         <Mark className="size-7" />
-        <span className="font-display text-lg text-fg">ProveIt</span>
+        <span className="font-display text-lg text-fg">
+          ProveIt<sup>&trade;</sup>
+        </span>
       </Link>
 
       <div className="w-full max-w-sm rounded-xl border border-line bg-surface p-8 shadow-[var(--shadow-dark)]">

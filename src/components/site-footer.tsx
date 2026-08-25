@@ -9,11 +9,16 @@ export function SiteFooter() {
         <div>
           <div className="flex items-center gap-2">
             <Mark className="size-6" />
-            <span className="font-display text-lg text-fg">ProveIt</span>
+            <span className="font-display text-lg text-fg">
+              ProveIt<sup>&trade;</sup>
+            </span>
           </div>
           <p className="mt-2 max-w-sm text-sm text-muted">
             Task verification for multi-unit foodservice. Proof, not a shift
             report.
+          </p>
+          <p className="mt-4 text-xs text-subtle">
+            &copy; {new Date().getFullYear()} ProveIt. All rights reserved.
           </p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">

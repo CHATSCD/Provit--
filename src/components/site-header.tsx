@@ -43,7 +43,9 @@ export function SiteHeader() {
           aria-label="ProveIt home"
         >
           <Mark className="size-7" />
-          <span className="font-display text-xl tracking-tight">ProveIt</span>
+          <span className="font-display text-xl tracking-tight">
+            ProveIt<sup>&trade;</sup>
+          </span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm text-muted md:flex">
           <a href="#how" className="transition-colors hover:text-fg">
